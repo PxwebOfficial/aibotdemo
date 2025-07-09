@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Единый платежный шлюз ММЦ</title>
+  <!-- Bootstrap & стили -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f8f9fa; }
+    .card-payment { max-width:500px; margin:40px auto; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+    .card-payment .card-body { padding:2rem; }
+  </style>
+</head>
+<body>
+  <!-- Шапка -->
+  <nav class="navbar navbar-light bg-white shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <img src="mmc.svg" alt="ММЦ" height="60"
+          style="filter: invert(14%) sepia(88%) saturate(4719%) hue-rotate(347deg) brightness(87%) contrast(91%);">
+      </a>
+    </div>
+  </nav>
+
+  <!-- Форма -->
+  <div class="card card-payment bg-white">
+    <div class="card-body">
+      <h5 class="text-center mb-4">Единый платежный шлюз услуг ММЦ</h5>
+       <form>
+        <div class="mb-3">
+          <label for="card-number" class="form-label">Номер карты</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="card-number" 
+            placeholder="0000 0000 0000 0000"
+          >
+        </div>
+        <div class="row">
+          <div class="col-6 mb-3">
+            <label for="card-holder" class="form-label">Имя владельца</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="card-holder" 
+              placeholder="Иван Иванов"
+            >
+          </div>
+          <div class="col-3 mb-3">
+            <label class="form-label">Месяц</label>
+            <select class="form-select" id="exp-month">
+              <option>01</option><option>02</option><option>03</option>
+              <option>04</option><option>05</option><option>06</option>
+              <option>07</option><option>08</option><option>09</option>
+              <option>10</option><option>11</option><option>12</option>
+            </select>
+          </div>
+          <div class="col-3 mb-3">
+            <label class="form-label">Год</label>
+            <select class="form-select" id="exp-year">
+              <option>2023</option><option>2024</option><option>2025</option>
+              <option>2026</option><option>2027</option><option>2028</option>
+            </select>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="cvc" class="form-label">CVC</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="cvc" 
+            placeholder="000"
+          >
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Сумма и кнопка -->
+  <div class="container text-center mb-5">
+  <ul class="list-group mb-4">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Полис ДМС
+          <span class="fw-bold">4 000 ₽</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Госпошлина
+          <span class="fw-bold">5 000 ₽</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Перевод паспорта
+          <span class="fw-bold">1 000 ₽</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Прочие услуги
+          <span class="fw-bold">19 000 ₽</span>
+        </li>
+      </ul>
+    <h3>Итого: <strong>29 000 ₽</strong></h3>
+    <button id="pay-btn" class="btn btn-warning btn-lg mt-3">Оплатить</button>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Объединённый скрипт WebApp + UI -->
+<!--   <script>
+
+  const params = new URLSearchParams(window.location.search);
+  const patent = params.get('patent') || 'неизвестен';
+  document.querySelector('#patent-id span').textContent = patent;
+    
+
+  window.Telegram?.WebApp?.ready()
+  console.log('🔎 Telegram.WebApp:', window.Telegram?.WebApp)
+  console.log('🔎 sendData функция есть?', typeof window.Telegram?.WebApp?.sendData)
+
+
+  const payBtn = document.getElementById('pay-btn');
+  payBtn.addEventListener('click', () => {
+    // 1) отрисовка “успешно”
+    document.querySelector('.card-payment').style.display = 'none'
+    document.querySelector('.container.text-center').style.display = 'none'
+    const msg = document.createElement('div')
+    msg.style.textAlign = 'center'
+    msg.style.marginTop = '50px'
+    msg.innerHTML = '<h2>✅ Успешно оплачено</h2>'
+    document.body.appendChild(msg)
+
+    // 2) логируем и алертим
+    const payload = { type: 'patent_paid', patent }
+    console.log('▶️ sendData payload:', payload)
+    alert('Отправляем данные в бота: ' + JSON.stringify(payload))
+
+    // 3) шлём Telegram
+    window.Telegram.WebApp.sendData(JSON.stringify(payload))
+
+    // 4) подсказка
+    setTimeout(() => {
+      const hint = document.createElement('div')
+      hint.style.textAlign = 'center'
+      hint.style.marginTop = '20px'
+      hint.innerHTML = '<em>Теперь можно закрыть данное окно</em>'
+      document.body.appendChild(hint)
+    }, 2000)
+  })
+</script> -->
+
+  <script>
+  // 1) Подхватываем API
+  const tg = window.Telegram?.WebApp      // Android, Desktop
+           || window.TelegramGameProxy    // iOS
+           || window.TelegramWebviewProxy // старые клиенты
+           || {};
+  if (!tg) {
+      alert("⚠️ Откройте, пожалуйста, именно из Telegram-клиента");
+      console.warn("Telegram WebApp API не найден");
+    }
+    else {
+    console.log("✅ Это Telegram Web App!", {
+      initData: tg.initData,      // подписанные данные о сессии
+      version: tg.version         // версия JS SDK
+    });  
+    }
+
+  // 2) Из URL-query достаём номер патента
+  const patent = new URLSearchParams(location.search).get('patent') || 'неизвестен';
+  document.querySelector('#patent-id span').textContent = patent;
+
+  // 3) Сообщаем, что WebApp готов
+  tg.ready?.();
+
+  // 4) Навешиваем на кнопку
+  document.getElementById('pay-btn').addEventListener('click', () => {
+    // a) UI-перерисовка
+    document.querySelector('.card-payment').style.display = 'none';
+    document.querySelector('.container.text-center').style.display = 'none';
+    const msg = document.createElement('div');
+    msg.innerHTML = '<h2 style="text-align:center; margin-top:50px">✅ Успешно оплачено</h2>';
+    document.body.appendChild(msg);
+
+    // b) Собираем полезную нагрузку
+    const payload = { type: 'patent_paid', patent };
+    console.log('▶️ sendData payload:', payload);
+
+    // c) Шлём в Telegram
+    if (typeof tg.sendData === 'function') {
+      tg.sendData(JSON.stringify(payload))
+    } else if (typeof tg.sendEvent === 'function') {
+      // для некоторых старых iOS-клиентов
+      tg.sendEvent('web_app_data', JSON.stringify(payload))
+    } else {
+      console.warn('Telegram WebApp API не найден');
+    }
+
+    console.log("▶️ отправил данные в бота:", payload);
+
+    // d) Подсказка через 2 сек
+    setTimeout(() => {
+  // создаём элемент для подсказки
+  const hint = document.createElement('div');
+  hint.style.textAlign = 'center';
+  hint.style.marginTop = '20px';
+  document.body.appendChild(hint);
+
+  // запускаем обратный отсчёт
+  let seconds = 5;
+  const intervalId = setInterval(() => {
+    hint.innerHTML = `<em>Данное окно закроется автоматически через ${seconds} сек</em>`;
+
+    if (seconds === 0) {
+      clearInterval(intervalId);
+      tg.close?.();  // закрываем WebApp
+    }
+
+    seconds--;
+  }, 1000);
+
+}, 1000);
+    
+  });
+</script>
+</body>
+</html>
