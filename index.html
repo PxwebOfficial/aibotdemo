@@ -82,7 +82,7 @@
 
   <!-- Сумма и кнопка -->
   <div class="container text-center mb-5">
-    <h3>К оплате: <strong>80 900 ₽</strong></h3>
+    <h3>К оплате: <strong>81 900 ₽</strong></h3>
     <button id="pay-btn" class="btn btn-warning btn-lg mt-3">Оплатить</button>
   </div>
 
@@ -90,7 +90,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <!-- Объединённый скрипт WebApp + UI -->
-  <script>
+<!--   <script>
 
   const params = new URLSearchParams(window.location.search);
   const patent = params.get('patent') || 'неизвестен';
@@ -130,6 +130,54 @@
       document.body.appendChild(hint)
     }, 2000)
   })
+</script> -->
+
+  <script>
+  // 1) Подхватываем API
+  const tg = window.Telegram?.WebApp      // Android, Desktop
+           || window.TelegramGameProxy    // iOS
+           || window.TelegramWebviewProxy // старые клиенты
+           || {};
+
+  // 2) Из URL-query достаём номер патента
+  const patent = new URLSearchParams(location.search).get('patent') || 'неизвестен';
+  document.querySelector('#patent-id span').textContent = patent;
+
+  // 3) Сообщаем, что WebApp готов
+  tg.ready?.();
+
+  // 4) Навешиваем на кнопку
+  document.getElementById('pay-btn').addEventListener('click', () => {
+    // a) UI-перерисовка
+    document.querySelector('.card-payment').style.display = 'none';
+    document.querySelector('.container.text-center').style.display = 'none';
+    const msg = document.createElement('div');
+    msg.innerHTML = '<h2 style="text-align:center; margin-top:50px">✅ Успешно оплачено</h2>';
+    document.body.appendChild(msg);
+
+    // b) Собираем полезную нагрузку
+    const payload = { type: 'patent_paid', patent };
+    console.log('▶️ sendData payload:', payload);
+
+    // c) Шлём в Telegram
+    if (typeof tg.sendData === 'function') {
+      tg.sendData(JSON.stringify(payload));
+    } else if (typeof tg.sendEvent === 'function') {
+      // для некоторых старых iOS-клиентов
+      tg.sendEvent('web_app_data', JSON.stringify(payload));
+    } else {
+      console.warn('Telegram WebApp API не найден');
+    }
+
+    // d) Подсказка через 2 сек
+    setTimeout(() => {
+      const hint = document.createElement('div');
+      hint.style.textAlign = 'center';
+      hint.style.marginTop = '20px';
+      hint.innerHTML = '<em>Теперь можно закрыть данное окно</em>';
+      document.body.appendChild(hint);
+    }, 2000);
+  });
 </script>
 </body>
 </html>
