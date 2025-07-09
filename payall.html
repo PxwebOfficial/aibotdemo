@@ -110,48 +110,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <!-- Объединённый скрипт WebApp + UI -->
-<!--   <script>
-
-  const params = new URLSearchParams(window.location.search);
-  const patent = params.get('patent') || 'неизвестен';
-  document.querySelector('#patent-id span').textContent = patent;
-    
-
-  window.Telegram?.WebApp?.ready()
-  console.log('🔎 Telegram.WebApp:', window.Telegram?.WebApp)
-  console.log('🔎 sendData функция есть?', typeof window.Telegram?.WebApp?.sendData)
-
-
-  const payBtn = document.getElementById('pay-btn');
-  payBtn.addEventListener('click', () => {
-    // 1) отрисовка “успешно”
-    document.querySelector('.card-payment').style.display = 'none'
-    document.querySelector('.container.text-center').style.display = 'none'
-    const msg = document.createElement('div')
-    msg.style.textAlign = 'center'
-    msg.style.marginTop = '50px'
-    msg.innerHTML = '<h2>✅ Успешно оплачено</h2>'
-    document.body.appendChild(msg)
-
-    // 2) логируем и алертим
-    const payload = { type: 'patent_paid', patent }
-    console.log('▶️ sendData payload:', payload)
-    alert('Отправляем данные в бота: ' + JSON.stringify(payload))
-
-    // 3) шлём Telegram
-    window.Telegram.WebApp.sendData(JSON.stringify(payload))
-
-    // 4) подсказка
-    setTimeout(() => {
-      const hint = document.createElement('div')
-      hint.style.textAlign = 'center'
-      hint.style.marginTop = '20px'
-      hint.innerHTML = '<em>Теперь можно закрыть данное окно</em>'
-      document.body.appendChild(hint)
-    }, 2000)
-  })
-</script> -->
-
   <script>
   // 1) Подхватываем API
   const tg = window.Telegram?.WebApp      // Android, Desktop
@@ -169,10 +127,7 @@
     });  
     }
 
-  // 2) Из URL-query достаём номер патента
-  const patent = new URLSearchParams(location.search).get('patent') || 'неизвестен';
-  document.querySelector('#patent-id span').textContent = patent;
-
+  
   // 3) Сообщаем, что WebApp готов
   tg.ready?.();
 
@@ -185,21 +140,6 @@
     msg.innerHTML = '<h2 style="text-align:center; margin-top:50px">✅ Успешно оплачено</h2>';
     document.body.appendChild(msg);
 
-    // b) Собираем полезную нагрузку
-    const payload = { type: 'patent_paid', patent };
-    console.log('▶️ sendData payload:', payload);
-
-    // c) Шлём в Telegram
-    if (typeof tg.sendData === 'function') {
-      tg.sendData(JSON.stringify(payload))
-    } else if (typeof tg.sendEvent === 'function') {
-      // для некоторых старых iOS-клиентов
-      tg.sendEvent('web_app_data', JSON.stringify(payload))
-    } else {
-      console.warn('Telegram WebApp API не найден');
-    }
-
-    console.log("▶️ отправил данные в бота:", payload);
 
     // d) Подсказка через 2 сек
     setTimeout(() => {
