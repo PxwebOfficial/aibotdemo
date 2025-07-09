@@ -84,7 +84,7 @@
         return;
       }
       // переходим на страницу оплаты патента с параметром в URL
-      const url = `index.html?patent=${encodeURIComponent(patent)}`;
+      const url = `patent.html?patent=${encodeURIComponent(patent)}`;
       if (typeof tg.openLink === 'function') {
         tg.openLink(url);
       } else {
