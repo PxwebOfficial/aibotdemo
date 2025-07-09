@@ -82,7 +82,7 @@
 
   <!-- Сумма и кнопка -->
   <div class="container text-center mb-5">
-    <h3>К оплате: <strong>83 900 ₽</strong></h3>
+    <h3>К оплате: <strong>80 900 ₽</strong></h3>
     <button id="pay-btn" class="btn btn-warning btn-lg mt-3">Оплатить</button>
   </div>
 
@@ -134,14 +134,17 @@
 
   <script>
   // 1) Подхватываем API
-  const tg = window.Telegram?.WebApp      // Android, Desktop
-           || window.TelegramGameProxy    // iOS
-           || window.TelegramWebviewProxy // старые клиенты
-           || {};
-  if (!tg) {
-      alert("⚠️ Откройте, пожалуйста, именно из Telegram-клиента");
-      console.warn("Telegram WebApp API не найден");
-    }
+  const tg = window.Telegram.WebApp;
+    if (!tg) {
+    console.warn("⚠️ Telegram WebApp API не найден — значит вы вне Telegram-клиента");
+  } else {
+    //  Добавляем вывод в консоль
+    console.log("✅ Это Telegram Web App!", {
+      initData: tg.initData,      // подписанные данные о сессии
+      version: tg.version         // версия JS SDK
+    });
+  }
+  tg.ready();
 
   // 2) Из URL-query достаём номер патента
   const patent = new URLSearchParams(location.search).get('patent') || 'неизвестен';
@@ -164,14 +167,12 @@
     console.log('▶️ sendData payload:', payload);
 
     // c) Шлём в Telegram
-    if (typeof tg.sendData === 'function') {
-      tg.sendData(JSON.stringify(payload));
-    } else if (typeof tg.sendEvent === 'function') {
-      // для некоторых старых iOS-клиентов
-      tg.sendEvent('web_app_data', JSON.stringify(payload));
-    } else {
-      console.warn('Telegram WebApp API не найден');
-    }
+    const payload = { type: 'patent_paid', patent };
+    console.log("▶️ Отправляем данные в бота:", payload);
+
+    // Отправка в Telegram
+    tg.sendData(JSON.stringify(payload));
+    console.log("▶️ отправлено в бота:", payload);
 
     // d) Подсказка через 2 сек
     setTimeout(() => {
