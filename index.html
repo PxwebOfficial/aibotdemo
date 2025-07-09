@@ -4,157 +4,71 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Оплата патента</title>
-
-  <!-- Bootstrap 5 CSS -->
-  <link 
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" 
-    rel="stylesheet"
-  >
-  <!-- Font Awesome (если не нужен — можно убрать) -->
-  <link 
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" 
-    rel="stylesheet"
-  >
-
+  <!-- Bootstrap & стили -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-      background-color: #f8f9fa;
-    }
-    .card-payment {
-      max-width: 500px;
-      margin: 40px auto;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    .card-payment .card-body {
-      padding: 2rem;
-    }
+    body { background-color: #f8f9fa; }
+    .card-payment { max-width:500px; margin:40px auto; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+    .card-payment .card-body { padding:2rem; }
   </style>
 </head>
 <body>
-  <!-- Шапка с логотипом ММЦ -->
+  <!-- Шапка -->
   <nav class="navbar navbar-light bg-white shadow-sm">
     <div class="container">
       <a class="navbar-brand" href="/">
-        <img 
-          src="mmc.svg" 
-          alt="ММЦ" 
-          height="60"
-          style="filter: invert(14%) sepia(88%) saturate(4719%) hue-rotate(347deg) brightness(87%) contrast(91%);"
-        >
+        <img src="mmc.svg" alt="ММЦ" height="60"
+          style="filter: invert(14%) sepia(88%) saturate(4719%) hue-rotate(347deg) brightness(87%) contrast(91%);">
       </a>
     </div>
   </nav>
 
-  <!-- Карточка с формой -->
+  <!-- Форма -->
   <div class="card card-payment bg-white">
     <div class="card-body">
-      <!-- Новый заголовок вместо логотипов карт -->
       <h5 id="patent-id" class="text-center mb-4">
-  Оплата за патент № <span class="fw-bold">—</span>
-</h5>
-
+        Оплата за патент № <span class="fw-bold">—</span>
+      </h5>
       <form>
-        <div class="mb-3">
-          <label for="card-number" class="form-label">Номер карты</label>
-          <input 
-            type="text" 
-            class="form-control" 
-            id="card-number" 
-            placeholder="0000 0000 0000 0000"
-          >
-        </div>
-        <div class="row">
-          <div class="col-6 mb-3">
-            <label for="card-holder" class="form-label">Имя владельца</label>
-            <input 
-              type="text" 
-              class="form-control" 
-              id="card-holder" 
-              placeholder="Иван Иванов"
-            >
-          </div>
-          <div class="col-3 mb-3">
-            <label class="form-label">Месяц</label>
-            <select class="form-select" id="exp-month">
-              <option>01</option><option>02</option><option>03</option>
-              <option>04</option><option>05</option><option>06</option>
-              <option>07</option><option>08</option><option>09</option>
-              <option>10</option><option>11</option><option>12</option>
-            </select>
-          </div>
-          <div class="col-3 mb-3">
-            <label class="form-label">Год</label>
-            <select class="form-select" id="exp-year">
-              <option>2023</option><option>2024</option><option>2025</option>
-              <option>2026</option><option>2027</option><option>2028</option>
-            </select>
-          </div>
-        </div>
-        <div class="mb-3">
-          <label for="cvc" class="form-label">CVC</label>
-          <input 
-            type="text" 
-            class="form-control" 
-            id="cvc" 
-            placeholder="000"
-          >
-        </div>
+        <!-- поля карты… -->
       </form>
     </div>
   </div>
 
-  <!-- Блок суммы и кнопки -->
+  <!-- Сумма и кнопка -->
   <div class="container text-center mb-5">
-    <h3>К оплате: <strong>8 900 ₽</strong></h3>
-    <button 
-      id="pay-btn" 
-      class="btn btn-warning btn-lg mt-3"
-    >
-      Оплатить
-    </button>
+    <h3>К оплате: <strong>8 900 ₽уб</strong></h3>
+    <button id="pay-btn" class="btn btn-warning btn-lg mt-3">Оплатить</button>
   </div>
 
-  <!-- Bootstrap JS Bundle -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Наш новый скрипт -->
-<script>
-  // Дождаться готовности Web App
-  window.Telegram.WebApp.ready();
+  <!-- Объединённый скрипт WebApp + UI -->
+  <script>
+    // 1) Подставляем патент из URL
+    const params = new URLSearchParams(window.location.search);
+    const patent = params.get('patent') || 'неизвестен';
+    document.querySelector('#patent-id span').textContent = patent;
 
-  // Селекторы на нашу форму и блок с суммой
-  const cardBlock   = document.querySelector('.card-payment');
-  const summaryBlock = document.querySelector('.container.text-center');
+    // 2) Говорим Telegram, что всё готово
+    window.Telegram?.WebApp?.ready();
 
-  document
-    .getElementById('pay-btn')
-    .addEventListener('click', () => {
-      // 1) Прячем форму и сумму
+    // 3) Навешиваем логику на кнопку “Оплатить”
+    const cardBlock    = document.querySelector('.card-payment');
+    const summaryBlock = document.querySelector('.container.text-center');
+    document.getElementById('pay-btn').addEventListener('click', () => {
       cardBlock.style.display    = 'none';
       summaryBlock.style.display = 'none';
-
-      // 2) Показать сообщение об успехе
+      // сообщение об успехе
       const msg = document.createElement('div');
       msg.style.textAlign = 'center';
       msg.style.marginTop = '50px';
       msg.innerHTML = '<h2>✅ Успешно оплачено</h2>';
       document.body.appendChild(msg);
-
-      // 3) Закрыть Web App через 3 секунды
-      setTimeout(() => {
-        window.Telegram.WebApp.close();
-      }, 3000);
+      // через 3 сек закрываем WebApp
+      setTimeout(() => window.Telegram?.WebApp?.close(), 3000);
     });
-</script>
-  <script>
-  // разбор query-параметров
-  const params = new URLSearchParams(window.location.search);
-  const patent = params.get('patent') || 'неизвестен';
-
-  // находим спан и вставляем
-  const el = document.querySelector('#patent-id span');
-  el.textContent = patent;
-</script>
+  </script>
 </body>
 </html>
