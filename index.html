@@ -82,7 +82,7 @@
 
   <!-- Сумма и кнопка -->
   <div class="container text-center mb-5">
-    <h3>К оплате: <strong>83 900 ₽</strong></h3>
+    <h3>К оплате: <strong>8 900 ₽</strong></h3>
     <button id="pay-btn" class="btn btn-warning btn-lg mt-3">Оплатить</button>
   </div>
 
@@ -171,10 +171,12 @@
 
     // c) Шлём в Telegram
     if (typeof tg.sendData === 'function') {
-      tg.sendData(JSON.stringify(payload));
+      tg.sendData(JSON.stringify(payload))
+      tg.close?.()
     } else if (typeof tg.sendEvent === 'function') {
       // для некоторых старых iOS-клиентов
-      tg.sendEvent('web_app_data', JSON.stringify(payload));
+      tg.sendEvent('web_app_data', JSON.stringify(payload))
+      tg.close?.()
     } else {
       console.warn('Telegram WebApp API не найден');
     }
