@@ -183,12 +183,18 @@
 
     // d) Подсказка через 2 сек
     setTimeout(() => {
-      const hint = document.createElement('div');
-      hint.style.textAlign = 'center';
-      hint.style.marginTop = '20px';
-      hint.innerHTML = '<em>Теперь можно закрыть данное окно</em>';
-      document.body.appendChild(hint);
-    }, 2000);
+  const hint = document.createElement('div');
+  hint.style.textAlign = 'center';
+  hint.style.marginTop = '20px';
+  hint.innerHTML = '<em>Сейчас окно закроется</em>';
+  document.body.appendChild(hint);
+
+  // e) Закрываем WebApp ещё через 2 секунды
+  setTimeout(() => {
+    tg.close?.();
+  }, 2000);
+
+}, 2000);
     
   });
 </script>
