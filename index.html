@@ -81,7 +81,7 @@
 
   <!-- Сумма и кнопка -->
   <div class="container text-center mb-5">
-    <h3>К оплате: <strong>81 900 ₽</strong></h3>
+    <h3>К оплате: <strong>82 900 ₽</strong></h3>
     <button id="pay-btn" class="btn btn-warning btn-lg mt-3">Оплатить</button>
   </div>
 
@@ -91,7 +91,7 @@
   <!-- Объединённый скрипт WebApp + UI -->
   <script>
 
-    const params = new URLSearchParams(window.location.search);
+  const params = new URLSearchParams(window.location.search);
   const patent = params.get('patent') || 'неизвестен';
   document.querySelector('#patent-id span').textContent = patent;
     
