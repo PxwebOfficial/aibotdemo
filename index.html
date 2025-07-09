@@ -37,7 +37,7 @@
     <div class="d-grid gap-4">
       <!-- 1) Оплата услуг -->
       <button id="services-btn" class="btn btn-warning btn-menu">
-        💳 Оплатить услуги ММЦ
+        💳 Оплатить все услуги ММЦ разом
       </button>
 
       <!-- 2) Оплатить патент -->
@@ -74,7 +74,7 @@
 
     // 1) Оплатить услуги ММЦ
     document.getElementById('services-btn').addEventListener('click', () => {
-      window.location.href = 'payall.html';
+      window.location.href = './payall.html';
     });
 
     // 2) Показать ввод патента
@@ -105,7 +105,7 @@
         alert('Введите 12 цифр патента в формате XX XXXXXXXXXX');
         return;
       }
-      window.location.href = `patent.html?patent=${encodeURIComponent(patent)}`;
+      window.location.href = `./patent.html?patent=${encodeURIComponent(patent)}`;
     });
   </script>
 </body>
