@@ -113,6 +113,12 @@
     msg.innerHTML = '<h2>✅ Успешно оплачено</h2>';
     document.body.appendChild(msg);
 
+    // сообщаем боту
+    Telegram.WebApp.sendData(JSON.stringify({
+      type: "patent_paid",
+      patent: patent
+    }));
+
     // через 2 секунды показываем подсказку
     setTimeout(() => {
       const hint = document.createElement('div');
