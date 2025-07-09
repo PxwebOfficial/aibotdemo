@@ -27,7 +27,7 @@
     <div class="container">
       <a class="navbar-brand" href="https://pxwebofficial.github.io/aibotdemo/index.html">
         <img src="mmc.svg" alt="ММЦ" height="60"
-          style="filter: invert(14%) sepia(88%) saturate(4719%) hue-rotate(347deg) brightness(87%) contrast(91%);">
+             style="filter: invert(14%) sepia(88%) saturate(4719%) hue-rotate(347deg) brightness(87%) contrast(91%);">
       </a>
     </div>
   </nav>
@@ -35,22 +35,28 @@
   <!-- Меню -->
   <div class="container mt-5">
     <div class="d-grid gap-4">
-      <!-- Кнопка 1 -->
+      <!-- 1) Оплата услуг -->
       <button id="services-btn" class="btn btn-warning btn-menu">
         💳 Оплатить услуги ММЦ
       </button>
 
-      <!-- Поле для ввода и кнопка -->
-      <div class="input-group input-group-lg">
+      <!-- 2) Оплатить патент -->
+      <button id="patent-btn-main" class="btn btn-primary btn-menu">
+        📄 Оплатить патент
+      </button>
+
+      <!-- 3) Скрытая панель ввода патента -->
+      <div id="patent-input-group" class="input-group input-group-lg mt-3" style="display:none;">
         <input
           id="patent-input"
           type="text"
           class="form-control"
-          placeholder="Введите номер патента1"
-          aria-label="Номер патента"
+          placeholder="XX XXXXXXXXXX"
+          maxlength="13"
+          aria-label="Номер патента (две цифры, пробел, десять цифр)"
         >
-        <button id="patent-btn" class="btn btn-primary">
-          Оплатить
+        <button id="patent-submit" class="btn btn-primary">
+          Перейти
         </button>
       </div>
     </div>
@@ -66,30 +72,42 @@
              || {};
     tg.ready?.();
 
-    // Обработчик кнопки "Оплатить услуги ММЦ"
+    // 1) Оплатить услуги ММЦ
     document.getElementById('services-btn').addEventListener('click', () => {
-      const url = 'payall.html';  // страница с единым платежным шлюзом
-      if (typeof tg.openLink === 'function') {
-        tg.openLink(url);
-      } else {
-        window.location.href = url;
+      const url = 'payall.html';
+      tg.openLink ? tg.openLink(url) : window.location.href = url;
+    });
+
+    // 2) Показать ввод патента
+    document.getElementById('patent-btn-main').addEventListener('click', () => {
+      const grp = document.getElementById('patent-input-group');
+      grp.style.display = grp.style.display === 'flex' ? 'none' : 'flex';
+      if (grp.style.display === 'flex') {
+        document.getElementById('patent-input').focus();
       }
     });
 
-    // Обработчик кнопки "Оплатить" для патента
-    document.getElementById('patent-btn').addEventListener('click', () => {
-      const patent = document.getElementById('patent-input').value.trim();
-      if (!patent) {
-        alert('Пожалуйста, введите номер патента');
+    // 3) Фильтрация ввода: только цифры + авто-пробел после 2-х цифр
+    const inp = document.getElementById('patent-input');
+    inp.addEventListener('input', (e) => {
+      let v = e.target.value.replace(/\D/g, '');       // убираем всё, кроме цифр
+      if (v.length > 12) v = v.slice(0, 12);            // максимум 12 цифр
+      if (v.length > 2) {
+        v = v.slice(0,2) + ' ' + v.slice(2);
+      }
+      e.target.value = v;
+    });
+
+    // 4) Отправка патента при клике «Перейти»
+    document.getElementById('patent-submit').addEventListener('click', () => {
+      const patent = inp.value;
+      // проверяем длину: 2 + пробел + 10 = 13 символов
+      if (patent.length !== 13) {
+        alert('Введите 12 цифр патента в формате XX XXXXXXXXXX');
         return;
       }
-      // переходим на страницу оплаты патента с параметром в URL
       const url = `patent.html?patent=${encodeURIComponent(patent)}`;
-      if (typeof tg.openLink === 'function') {
-        tg.openLink(url);
-      } else {
-        window.location.href = url;
-      }
+      tg.openLink ? tg.openLink(url) : window.location.href = url;
     });
   </script>
 </body>
