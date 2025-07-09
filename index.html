@@ -81,7 +81,7 @@
 
   <!-- Сумма и кнопка -->
   <div class="container text-center mb-5">
-    <h3>К оплате: <strong>84 900 ₽</strong></h3>
+    <h3>К оплате: <strong>85 900 ₽</strong></h3>
     <button id="pay-btn" class="btn btn-warning btn-lg mt-3">Оплатить</button>
   </div>
 
@@ -98,6 +98,7 @@
 
   window.Telegram?.WebApp?.ready()
 
+  const payBtn = document.getElementById('pay-btn');
   payBtn.addEventListener('click', () => {
     // 1) отрисовка “успешно”
     document.querySelector('.card-payment').style.display = 'none'
