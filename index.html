@@ -114,6 +114,17 @@
     document.body.appendChild(msg);
 
     // сообщаем боту
+    document.getElementById('pay-btn').addEventListener('click', () => {
+      const payload = { type: 'patent_paid', patent };
+      console.log('▶️ sendData payload:', payload);
+      // Можно ещё alert, чтобы браузер показал окно
+      alert('Отправляем данные в бота: ' + JSON.stringify(payload));
+    
+      window.Telegram.WebApp.sendData(JSON.stringify(payload));
+      // …
+    });
+
+    
     window.Telegram?.WebApp?.sendData(JSON.stringify({
       type: "patent_paid",
       patent: patent
