@@ -90,29 +90,38 @@
 
   <!-- Объединённый скрипт WebApp + UI -->
   <script>
-    // 1) Подставляем патент из URL
-    const params = new URLSearchParams(window.location.search);
-    const patent = params.get('patent') || 'неизвестен';
-    document.querySelector('#patent-id span').textContent = patent;
+  // 1) Подставляем патент из URL
+  const params = new URLSearchParams(window.location.search);
+  const patent = params.get('patent') || 'неизвестен';
+  document.querySelector('#patent-id span').textContent = patent;
 
-    // 2) Говорим Telegram, что всё готово
-    window.Telegram?.WebApp?.ready();
+  // 2) Говорим Telegram, что всё готово
+  window.Telegram?.WebApp?.ready();
 
-    // 3) Навешиваем логику на кнопку “Оплатить”
-    const cardBlock    = document.querySelector('.card-payment');
-    const summaryBlock = document.querySelector('.container.text-center');
-    document.getElementById('pay-btn').addEventListener('click', () => {
-      cardBlock.style.display    = 'none';
-      summaryBlock.style.display = 'none';
-      // сообщение об успехе
-      const msg = document.createElement('div');
-      msg.style.textAlign = 'center';
-      msg.style.marginTop = '50px';
-      msg.innerHTML = '<h2>✅ Успешно оплачено</h2>';
-      document.body.appendChild(msg);
-      // через 3 сек закрываем WebApp
-      setTimeout(() => window.Telegram?.WebApp?.close(), 3000);
-    });
-  </script>
+  // 3) Навешиваем логику на кнопку “Оплатить”
+  const cardBlock    = document.querySelector('.card-payment');
+  const summaryBlock = document.querySelector('.container.text-center');
+  document.getElementById('pay-btn').addEventListener('click', () => {
+    // прячем форму и сумму
+    cardBlock.style.display    = 'none';
+    summaryBlock.style.display = 'none';
+
+    // сообщение об успехе
+    const msg = document.createElement('div');
+    msg.style.textAlign = 'center';
+    msg.style.marginTop = '50px';
+    msg.innerHTML = '<h2>✅ Успешно оплачено</h2>';
+    document.body.appendChild(msg);
+
+    // через 2 секунды показываем подсказку
+    setTimeout(() => {
+      const hint = document.createElement('div');
+      hint.style.textAlign = 'center';
+      hint.style.marginTop = '20px';
+      hint.innerHTML = '<em>Теперь можно закрыть данное окно</em>';
+      document.body.appendChild(hint);
+    }, 2000);
+  });
+</script>
 </body>
 </html>
