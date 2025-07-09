@@ -91,9 +91,8 @@
   <!-- Объединённый скрипт WebApp + UI -->
   <script>
 
-  const params = new URLSearchParams(window.location.search);
-  const patent = params.get('patent') || 'неизвестен';
-  document.querySelector('#patent-id span').textContent = patent;
+  const payBtn = document.getElementById('pay-btn')
+  const patent = new URLSearchParams(window.location.search).get('patent') || 'неизвестен'
     
 
   window.Telegram?.WebApp?.ready()
