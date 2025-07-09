@@ -82,7 +82,7 @@
 
   <!-- Сумма и кнопка -->
   <div class="container text-center mb-5">
-    <h3>К оплате: <strong>81 900 ₽</strong></h3>
+    <h3>К оплате: <strong>82 900 ₽</strong></h3>
     <button id="pay-btn" class="btn btn-warning btn-lg mt-3">Оплатить</button>
   </div>
 
@@ -138,6 +138,10 @@
            || window.TelegramGameProxy    // iOS
            || window.TelegramWebviewProxy // старые клиенты
            || {};
+  if (!tg) {
+      alert("⚠️ Откройте, пожалуйста, именно из Telegram-клиента");
+      console.warn("Telegram WebApp API не найден");
+    }
 
   // 2) Из URL-query достаём номер патента
   const patent = new URLSearchParams(location.search).get('patent') || 'неизвестен';
