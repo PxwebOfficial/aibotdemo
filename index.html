@@ -127,5 +127,14 @@
         alert('Успешно оплачено');
       });
   </script>
+  <script>
+  // разбор query-параметров
+  const params = new URLSearchParams(window.location.search);
+  const patent = params.get('patent') || 'неизвестен';
+
+  // находим спан и вставляем
+  const el = document.querySelector('#patent-id span');
+  el.textContent = patent;
+</script>
 </body>
 </html>
