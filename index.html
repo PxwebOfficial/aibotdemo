@@ -74,8 +74,7 @@
 
     // 1) Оплатить услуги ММЦ
     document.getElementById('services-btn').addEventListener('click', () => {
-      const url = 'payall.html';
-      tg.openLink ? tg.openLink(url) : window.location.href = url;
+      window.location.href = 'payall.html';
     });
 
     // 2) Показать ввод патента
@@ -106,8 +105,7 @@
         alert('Введите 12 цифр патента в формате XX XXXXXXXXXX');
         return;
       }
-      const url = `patent.html?patent=${encodeURIComponent(patent)}`;
-      tg.openLink ? tg.openLink(url) : window.location.href = url;
+      window.location.href = `patent.html?patent=${encodeURIComponent(patent)}`;
     });
   </script>
 </body>
